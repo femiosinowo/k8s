@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard-stg
+  namespace: kube-system
+  labels:
+    k8s-app: kubernetes-dashboard
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+spec:
+  tls:
+  - hosts:
+    - dash.kube.local
+    secretName: tls-secret
+  rules:
+  - host: dash.kube.local
+    http:
+      paths:
+      - backend:
+        path: /
+          serviceName: kubernetes-dashboard
+          servicePort: 443

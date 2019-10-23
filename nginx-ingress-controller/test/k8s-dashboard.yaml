@@ -1,0 +1,39 @@
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  name: kubernetes-dashboard
+#  annotations:
+#    ingress.kubernetes.io/rewrite-target: /
+#spec:
+#  tls:
+#    - hosts:
+#      - k8s-dashboard.kube.local
+#      # This assumes tls-secret exists and the SSL 
+#      #       # certificate contains a CN for foo.bar.com
+#      secretName: tls-secret
+#  rules:
+#  - host: k8s-dashboard.kube.local
+#    http:
+#      paths:
+#        - path: /
+#          backend:
+#            serviceName: kubernetes-dashboard
+#            servicePort: 80
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+  name: external-auth-oauth2
+  namespace: kube-system
+spec:
+  rules:
+  - host: k8-dashboard.kube.local
+    http:
+      paths:
+      - backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 80
+        path: /
