@@ -1,0 +1,28 @@
+apiVersion: v1
+data:
+  git-clone.sh: |
+    #!/bin/sh -e
+    REPO=$1
+    REF=$2
+    DIR=$3
+    # Init Containers will re-run on Pod restart. Remove the directory's contents
+    # and reprovision when this happens.
+    if [ -d "$DIR" ]; then
+        rm -rf $( find $DIR -mindepth 1 )
+    fi
+    git clone $REPO $DIR
+    cd $DIR
+    git reset --hard $REF
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2019-11-11T03:14:12Z"
+  labels:
+    app: airflow
+    chart: airflow-4.1.2
+    heritage: Tiller
+    release: airflow
+  name: airflow-git-clone
+  namespace: airflow
+  resourceVersion: "4422859"
+  selfLink: /api/v1/namespaces/airflow/configmaps/airflow-git-clone
+  uid: 26279f30-5f23-4827-b0a0-f7a5134f6c86

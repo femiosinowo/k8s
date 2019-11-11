@@ -1,0 +1,43 @@
+apiVersion: v1
+data:
+  AIRFLOW__CELERY__CELERY_CONCURRENCY: "1"
+  AIRFLOW__CELERY__FLOWER_URL_PREFIX: ""
+  AIRFLOW__CELERY__WORKER_CONCURRENCY: "1"
+  AIRFLOW__CORE__BASE_LOG_FOLDER: /usr/local/airflow/logs
+  AIRFLOW__CORE__DAG_PROCESSOR_MANAGER_LOG_LOCATION: /usr/local/airflow/logs/dag_processor_manager/dag_processor_manager.log
+  AIRFLOW__CORE__DAGS_FOLDER: /dags
+  AIRFLOW__CORE__DONOT_PICKLE: "false"
+  AIRFLOW__CORE__ENABLE_XCOM_PICKLING: "false"
+  AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:admin@10.10.10.102:5432/K8S_AIRFLOW
+  AIRFLOW__KUBERNETES__DAGS_VOLUME_CLAIM: airflow-dags
+  AIRFLOW__KUBERNETES__NAMESPACE: airflow
+  AIRFLOW__KUBERNETES__WORKER_CONTAINER_REPOSITORY: puckel/docker-airflow
+  AIRFLOW__KUBERNETES__WORKER_CONTAINER_TAG: 1.10.4
+  AIRFLOW__KUBERNETES__WORKER_SERVICE_ACCOUNT_NAME: airflow
+  AIRFLOW__PROMETHEUSRULE_ENABLED: "true"
+  AIRFLOW__SCHEDULER__CHILD_PROCESS_LOG_DIRECTORY: /usr/local/airflow/logs/scheduler
+  AIRFLOW__WEBSERVER__BASE_URL: http://localhost:8080
+  DO_WAIT_INITDB: "false"
+  EXECUTOR: Kubernetes
+  FERNET_KEY: ""
+  FLOWER_PORT: "5555"
+  POSTGRES_DB: K8S_AIRFLOW
+  POSTGRES_HOST: 10.10.10.102
+  POSTGRES_PASSWORD: admin
+  POSTGRES_PORT: "5432"
+  REDIS_HOST: airflow-redis-master
+  REDIS_PORT: ""
+  TZ: Etc/UTC
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2019-11-11T03:14:12Z"
+  labels:
+    app: airflow
+    chart: airflow-4.1.2
+    heritage: Tiller
+    release: airflow
+  name: airflow-env
+  namespace: airflow
+  resourceVersion: "4533355"
+  selfLink: /api/v1/namespaces/airflow/configmaps/airflow-env
+  uid: b84bfcb2-8e93-4123-b5e4-dc86e9f78365

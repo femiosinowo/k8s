@@ -1,0 +1,29 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  creationTimestamp: "2019-11-11T03:14:12Z"
+  generation: 1
+  labels:
+    app: airflow
+    chart: airflow-4.1.2
+    component: scheduler
+    heritage: Tiller
+    release: airflow
+  name: airflow-pdb
+  namespace: airflow
+  resourceVersion: "4449279"
+  selfLink: /apis/policy/v1beta1/namespaces/airflow/poddisruptionbudgets/airflow-pdb
+  uid: 2f221062-2ab6-4d18-a714-3418457f51c4
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: airflow
+      component: scheduler
+      release: airflow
+status:
+  currentHealthy: 1
+  desiredHealthy: 0
+  disruptionsAllowed: 1
+  expectedPods: 1
+  observedGeneration: 1

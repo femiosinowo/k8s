@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: "2019-11-11T03:14:12Z"
+  labels:
+    app: airflow
+    chart: airflow-4.1.2
+    heritage: Tiller
+    release: airflow
+  name: airflow
+  namespace: airflow
+  resourceVersion: "4422867"
+  selfLink: /api/v1/namespaces/airflow/serviceaccounts/airflow
+  uid: d743f9f1-aa08-4948-a1ec-e6a3bd79e60f
+secrets:
+- name: airflow-token-cpvss

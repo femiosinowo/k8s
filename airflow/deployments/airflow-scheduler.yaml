@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+  creationTimestamp: "2019-11-11T03:14:12Z"
+  generation: 2
+  labels:
+    app: airflow
+    chart: airflow-4.1.2
+    component: scheduler
+    heritage: Tiller
+    release: airflow
+  name: airflow-scheduler
+  namespace: airflow
+  resourceVersion: "4449280"
+  selfLink: /apis/apps/v1/namespaces/airflow/deployments/airflow-scheduler
+  uid: f4d333d8-dde5-43f9-bc5a-6341081c28c2
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: airflow
+      component: scheduler
+      release: airflow
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 100%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config-env: 4a65fdce4179c32ce1713de697209f0c9688642f415a99baa8a97f62ed9cb22a
+        checksum/config-git-clone: 37ef556d276b817feb47040a29724155a56873599e4a49f2d17c2ac5c5e9f108
+        checksum/config-scripts: 1ef5e2f503ca0bb5a3c63b9da9c5131398c96f74b74d4f9b4255d5943fb9cd26
+        checksum/config-variables-pools: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/secret-connections: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+      creationTimestamp: null
+      labels:
+        app: airflow
+        component: scheduler
+        release: airflow
+    spec:
+      containers:
+      - args:
+        - bash
+        - -c
+        - |
+          echo 'waiting 10s...' && sleep 10 && mkdir -p /usr/local/airflow/.local/bin && export PATH=/usr/local/airflow/.local/bin:$PATH && echo "executing initdb" && airflow initdb && echo "executing scheduler" && airflow scheduler -n -1
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: airflow-redis
+        envFrom:
+        - configMapRef:
+            name: airflow-env
+        image: puckel/docker-airflow:1.10.4
+        imagePullPolicy: IfNotPresent
+        name: airflow-scheduler
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /requirements.txt
+          name: pip-requirements
+          subPath: requirements.txt
+        - mountPath: /usr/local/scripts
+          name: scripts
+        - mountPath: /dags
+          name: dags-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: airflow
+      serviceAccountName: airflow
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: airflow-requirements
+        name: pip-requirements
+      - configMap:
+          defaultMode: 493
+          name: airflow-scripts
+        name: scripts
+      - name: dags-data
+        persistentVolumeClaim:
+          claimName: airflow-dags
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2019-11-11T03:14:12Z"
+    lastUpdateTime: "2019-11-11T03:14:12Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2019-11-11T03:14:12Z"
+    lastUpdateTime: "2019-11-11T03:49:40Z"
+    message: ReplicaSet "airflow-scheduler-7bc7dbc845" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

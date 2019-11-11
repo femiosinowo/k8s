@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  requirements.txt: |
+    kubernetes
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2019-11-11T02:54:36Z"
+  name: airflow-requirements
+  namespace: airflow
+  resourceVersion: "4419365"
+  selfLink: /api/v1/namespaces/airflow/configmaps/airflow-requirements
+  uid: 561ec37c-6147-4412-93fa-93b667c190f9

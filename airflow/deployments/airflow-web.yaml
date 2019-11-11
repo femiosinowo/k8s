@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+  creationTimestamp: "2019-11-11T03:14:12Z"
+  generation: 2
+  labels:
+    app: airflow
+    chart: airflow-4.1.2
+    component: web
+    heritage: Tiller
+    release: airflow
+  name: airflow-web
+  namespace: airflow
+  resourceVersion: "4450693"
+  selfLink: /apis/apps/v1/namespaces/airflow/deployments/airflow-web
+  uid: 762dddd5-8a35-4272-8f13-a4ee378d33db
+spec:
+  minReadySeconds: 120
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: airflow
+      component: web
+      release: airflow
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config-env: 4a65fdce4179c32ce1713de697209f0c9688642f415a99baa8a97f62ed9cb22a
+        checksum/config-git-clone: 37ef556d276b817feb47040a29724155a56873599e4a49f2d17c2ac5c5e9f108
+        checksum/config-scripts: 1ef5e2f503ca0bb5a3c63b9da9c5131398c96f74b74d4f9b4255d5943fb9cd26
+      creationTimestamp: null
+      labels:
+        app: airflow
+        component: web
+        release: airflow
+    spec:
+      containers:
+      - args:
+        - bash
+        - -c
+        - |
+          echo 'waiting 60s...' && sleep 60 && mkdir -p /usr/local/airflow/.local/bin && export PATH=/usr/local/airflow/.local/bin:$PATH && echo 'executing webserver...' && airflow webserver
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: airflow-redis
+        envFrom:
+        - configMapRef:
+            name: airflow-env
+        image: puckel/docker-airflow:1.10.4
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: web
+            scheme: HTTP
+          initialDelaySeconds: 360
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: airflow-web
+        ports:
+        - containerPort: 8080
+          name: web
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: web
+            scheme: HTTP
+          initialDelaySeconds: 360
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /requirements.txt
+          name: pip-requirements
+          subPath: requirements.txt
+        - mountPath: /usr/local/scripts
+          name: scripts
+        - mountPath: /dags
+          name: dags-data
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 493
+          name: airflow-scripts
+        name: scripts
+      - configMap:
+          defaultMode: 420
+          name: airflow-requirements
+        name: pip-requirements
+      - name: dags-data
+        persistentVolumeClaim:
+          claimName: airflow-dags
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2019-11-11T03:14:12Z"
+    lastUpdateTime: "2019-11-11T03:26:21Z"
+    message: ReplicaSet "airflow-web-844bd4c8d9" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2019-11-11T06:19:06Z"
+    lastUpdateTime: "2019-11-11T06:19:06Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
