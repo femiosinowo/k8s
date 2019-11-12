@@ -100,4 +100,13 @@ data:
           labels:
             team: devops
 
+      - name: Airflow
+        rules:
+        - alert: AirflowDagAlert
+          expr:  airflow_dag_status{env="kube-local", status="failed"} > 0
+          for: 30m
+          labels:
+            team: fm
+          annotations:
+             description: "{{ $labels.instance }} - DAG {{ $labels.dag_id }} failed \n"
 
