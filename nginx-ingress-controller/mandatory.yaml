@@ -271,3 +271,45 @@ spec:
                   - /wait-shutdown
 
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2020-05-01T01:16:50Z"
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:loadBalancer:
+          f:ingress: {}
+    manager: controller
+    operation: Update
+    time: "2020-05-01T01:16:50Z"
+  name: nginx-ingress-controller
+  namespace: ingress-nginx
+  resourceVersion: "420584"
+  selfLink: /api/v1/namespaces/ingress-nginx/services/nginx-ingress-controller
+  uid: afc782d8-16dc-4bf4-a344-05a13b5bb41e
+spec:
+  clusterIP: 10.104.4.237
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: port-1
+    nodePort: 32248
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: port-2
+    nodePort: 30899
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  sessionAffinity: None
+  type: LoadBalancer
+
