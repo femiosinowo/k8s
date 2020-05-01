@@ -188,7 +188,7 @@ subjects:
 ---
 
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: nginx-ingress-controller
   namespace: ingress-nginx
@@ -211,11 +211,7 @@ spec:
     spec:
       # wait up to five minutes for the drain of connections
       terminationGracePeriodSeconds: 300
-      hostNetwork: true
       serviceAccountName: nginx-ingress-serviceaccount
-      nodeSelector:
-        node-type: router
-        kubernetes.io/os: linux
       containers:
         - name: nginx-ingress-controller
           image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
